@@ -1,1 +1,1 @@
-{\rtf1}
+![Alt text](images/example1.png?raw=true "Optional title")
