@@ -17,7 +17,7 @@ namespace AgentWatchApplication1
 
         static Bitmap _display;
         static InterruptPort _buttonUp;
-        static InterruptPort _buttonMenu;
+        static InterruptPort _buttonDown;
 
         static int _countVal = 0;
         static string _resetLabel = "Reset";
@@ -32,11 +32,11 @@ namespace AgentWatchApplication1
 
 
             _buttonUp = new InterruptPort(HardwareProvider.HwProvider.GetButtonPins(Button.VK_UP), false, Port.ResistorMode.PullDown, Port.InterruptMode.InterruptEdgeLow);
-            _buttonMenu = new InterruptPort(HardwareProvider.HwProvider.GetButtonPins(Button.VK_MENU), false, Port.ResistorMode.PullDown, Port.InterruptMode.InterruptEdgeLow);
+            _buttonDown = new InterruptPort(HardwareProvider.HwProvider.GetButtonPins(Button.VK_DOWN), false, Port.ResistorMode.PullDown, Port.InterruptMode.InterruptEdgeLow);
 
 
             _buttonUp.OnInterrupt += incrementCount;
-            _buttonMenu.OnInterrupt += resetCount;
+            _buttonDown.OnInterrupt += resetCount;
 
 
             // go to sleep; all further code should be timer-driven or event-driven
@@ -90,12 +90,18 @@ namespace AgentWatchApplication1
                 (DISPLAY_HEIGHT - fontStencil.Height) / 2);
 
             // Draw labels for Reset and Increment buttons.
-            _display.DrawText(_resetLabel, fontNinaB, Color.White, 2, DISPLAY_HEIGHT - fontNinaB.Height - 2);
-            int increaseLabelWidth = 0;
-            char[] charArray = _incrementLabel.ToCharArray(0, _incrementLabel.Length);
-            for (int letterNo = 0; letterNo < charArray.Length; letterNo++)
+            int resetLabelWidth = 0;
+            char[] resetCharArray = _resetLabel.ToCharArray(0, _resetLabel.Length);
+            for (int letterNo = 0; letterNo < resetCharArray.Length; letterNo++)
             {
-                increaseLabelWidth += fontNinaB.CharWidth(charArray[letterNo]);
+                resetLabelWidth += fontNinaB.CharWidth(resetCharArray[letterNo]);
+            }
+            _display.DrawText(_resetLabel, fontNinaB, Color.White, DISPLAY_WIDTH - resetLabelWidth - 2, DISPLAY_HEIGHT - fontNinaB.Height - 2);
+            int increaseLabelWidth = 0;
+            char[] increaseCharArray = _incrementLabel.ToCharArray(0, _incrementLabel.Length);
+            for (int letterNo = 0; letterNo < increaseCharArray.Length; letterNo++)
+            {
+                increaseLabelWidth += fontNinaB.CharWidth(increaseCharArray[letterNo]);
             }
             _display.DrawText(_incrementLabel, fontNinaB, Color.White, DISPLAY_WIDTH - increaseLabelWidth - 2, 2);
 
