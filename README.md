@@ -8,6 +8,8 @@ This application uses the button Button.VK_UP to trigger incrementation of the d
 
 This code is made available to help developers get started building Agent Watch applications and can be re-used or re-purposed to create new projects.
 
-I haven't determined what all the buttons on the Agent Watch emulator are named, but these are the ones I have figured out:
 
 ![Alt text](images/AGENT_BUTTON_MAP.png?raw=true "Agent Watch Button Map")
+
+This is a map of the buttons on the device. Use of VK_MENU should be avoided as it is a system button and access may be disabled in the future.
+The Top-Left button is backlight button for the watch and cannot be accessed by applications.

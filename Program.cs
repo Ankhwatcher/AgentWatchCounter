@@ -14,6 +14,7 @@ namespace AgentWatchApplication1
         /*Constants*/
         static int DISPLAY_HEIGHT = 128;
         static int DISPLAY_WIDTH = 128;
+        static int DISPLAY_MARGIN = 2;
 
         static Bitmap _display;
         static InterruptPort _buttonUp;
@@ -22,6 +23,7 @@ namespace AgentWatchApplication1
         static int _countVal = 0;
         static string _resetLabel = "Reset";
         static string _incrementLabel = "Increment";
+
         public static void Main()
         {
             // initialize display buffer
@@ -52,24 +54,8 @@ namespace AgentWatchApplication1
         private static void incrementCount(uint data1, uint data2, DateTime time)
         {
             if (_countVal < 9999999)
-            {
                 _countVal++;
 
-                //Increase values at a greater rate to test the font sizing.
-                /* 
-                if (_countVal > 9)
-                    _countVal = _countVal + 10;
-
-                if (_countVal > 99)
-                    _countVal = _countVal + 100;
-                if (_countVal > 999)
-                    _countVal = _countVal + 1000;
-                if (_countVal > 9999)
-                    _countVal = _countVal + 10000;
-                if (_countVal > 99999)
-                    _countVal = _countVal + 100000;
-                 */
-            }
             _display.Clear();
 
             Font fontNinaB = Resources.GetFont(Resources.FontResources.NinaB);
@@ -90,23 +76,29 @@ namespace AgentWatchApplication1
                 (DISPLAY_HEIGHT - fontStencil.Height) / 2);
 
             // Draw labels for Reset and Increment buttons.
-            int resetLabelWidth = 0;
-            char[] resetCharArray = _resetLabel.ToCharArray(0, _resetLabel.Length);
-            for (int letterNo = 0; letterNo < resetCharArray.Length; letterNo++)
-            {
-                resetLabelWidth += fontNinaB.CharWidth(resetCharArray[letterNo]);
-            }
-            _display.DrawText(_resetLabel, fontNinaB, Color.White, DISPLAY_WIDTH - resetLabelWidth - 2, DISPLAY_HEIGHT - fontNinaB.Height - 2);
+
+            _display.DrawText(_resetLabel, fontNinaB, Color.White, alignRight(_resetLabel, fontNinaB), alignBottom(fontNinaB));
+
+            _display.DrawText(_incrementLabel, fontNinaB, Color.White, alignRight(_incrementLabel, fontNinaB), DISPLAY_MARGIN);
+
+
+            _display.Flush();
+        }
+
+        private static int alignRight(string text, Font textFont)
+        {
             int increaseLabelWidth = 0;
             char[] increaseCharArray = _incrementLabel.ToCharArray(0, _incrementLabel.Length);
             for (int letterNo = 0; letterNo < increaseCharArray.Length; letterNo++)
             {
-                increaseLabelWidth += fontNinaB.CharWidth(increaseCharArray[letterNo]);
+                increaseLabelWidth += textFont.CharWidth(increaseCharArray[letterNo]);
             }
-            _display.DrawText(_incrementLabel, fontNinaB, Color.White, DISPLAY_WIDTH - increaseLabelWidth - 2, 2);
 
-
-            _display.Flush();
+            return DISPLAY_WIDTH - increaseLabelWidth - DISPLAY_MARGIN;
+        }
+        private static int alignBottom(Font textFont)
+        {
+            return DISPLAY_HEIGHT - textFont.Height - DISPLAY_MARGIN;
         }
     }
 }
